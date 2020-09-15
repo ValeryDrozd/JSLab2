@@ -11,7 +11,7 @@
 
 <nav style = "margin: 0;padding: 0; display:flex; width: 100%; height: 100%;">
 
-	<div class="divBlock" id="buttonBlock" style="width:15%; background-color:black;">
+	<div class="divBlock" id="buttonBlock" style="width:15%; background-color:#17202A;overflow-y: auto;">
 	
 	</div>
 	
@@ -33,50 +33,43 @@
 		window.location.replace("index.html?id="+$(elem).val());
 	}
 
-	//NEED COSMETICS CHANGES
+	//OK
 	function createButton(data){
-		return '<button id ="'+data['head']+'" class="blockButton" onclick = router(this) value="'+data['head']+'">'+data['head']+'<br>'+data['text'].substring(0,10)+'<br>'+data['data']+'</button><hr>';
+		return '<button id ="'+data['head']+'" class="blockButton" style = "font-size:0.9em;padding-left:5%;"  onclick = router(this) value="'+data['head']+'">'+data['head']+'<br>'+data['text'].substring(0,10)+'<br>'+data['data']+'</button><hr>';
 	}
 
 	//OK
 	window.addEventListener('beforeunload', function(event) {
         let text = $("#writeField").val();
-        let date = new Date();
+        let date = Date().substring(4,15);
         let head = text.trim();
-        let ind;
-        if(head=="" || text==localStorage.getItem(head))return;
-        try{
-        	ind = head.indexOf(' ',trimmed.indexOf(' ')+1);
+        if(head!=id || id==undefined){
+        	let ind = keys.indexOf(id);
+        	keys.splice(ind,ind>=0);
         }
-       	catch{
-       		ind = 5;
-       	}
-       	console.log(ind);
-        head = head.substring(0,5);
-        let i = 1;
-        while(localStorage.getItem(head)){
-        	head+="("+i+")";
-        }
-        if(id==undefined){
-        	keys.push(head);
-        }
-        else{
-        	keys = keys.filter(function(index) {
-        		return index!=id;
-        	});
-        	keys.push(head);
-        }
+        if(head==""){
+        	if(id==undefined)return;
+        		else{
+        			localStorage.removeItem(id);
+        			return;
+        		}
+        	}
+        head = head.substring(0,10);
+		let i=1;
+		while(keys.indexOf(head+"("+i+")")!=-1){
+			i+=1;
+		}
+		keys.push(head);
         localStorage.setItem(head,JSON.stringify({"content":text,"date":date}));
         localStorage.setItem("all",JSON.stringify(keys));
-
     });
 	
-	//NOT OK
+	//OK
 	(function () {
 		 let queryString = window.location.search;
          const urlParams = new URLSearchParams(queryString);
          id = urlParams.get('id');
-         let buttonList = '<button id="createButton" class="blockButton" onclick = "router(this)"> Create new Note </button><hr>';
+         let buttonList = '<button id="createButton" class="blockButton" style="text-align:center;" onclick = "router(this)"> Create new Note </button><hr>';
   		 keys = JSON.parse(localStorage.getItem("all"));
   		 if(keys==null)keys = [];  		 
   		 for(var i = keys.length-1;i>=0;i--){
@@ -87,11 +80,11 @@
          $("#buttonBlock").html(buttonList);
          console.log(keys);
          if(id==undefined || id == ""){
-         	$("#createButton").focus();
+         	$("#createButton").css("background-color","orange");
          }
          else{
          		console.log(id);
-         		$("#"+id).focus();
+         		$("#"+id).css("background-color","orange");
          		$("#writeField").val(JSON.parse(localStorage.getItem(id))["content"]);
          	}
 	})();

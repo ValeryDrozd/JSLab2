@@ -1,7 +1,7 @@
 .blockButton{
 	color:white; height: 5.5%;
 	box-shadow:none;
-	background-color:black;
+	background-color:#17202A;
 	width: 100%;
 	border: 0px;
 	border-radius: 0;
@@ -9,6 +9,7 @@
 	font-size: 1.4em;
 	margin: 0;
 	padding: 0;
+	text-align: left;
 }
 
 .blockButton:hover{
@@ -16,16 +17,49 @@
 }
 
 .blockButton:focus{
-	background-color:orange;
 	outline: none;
 }
 
 .divBlock{
 	flex-direction: column;
-	background-color: black;
+	background-color: #17202A;
 	height: 100vh;
 	margin: 0;
 	padding: 0;
+}
+
+::-webkit-scrollbar {
+    width: 10px; /* ширина для вертикального скролла */
+    background-color: #283747;
+}
+
+/* ползунок скроллбара */
+::-webkit-scrollbar-thumb {
+    background-color: #2E4053;
+    border-radius: 9em;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #253861;
+}
+
+/* Стрелки */
+
+::-webkit-scrollbar-button:vertical:start:decrement {
+    background: linear-gradient(120deg, #02141a 40%, rgba(0, 0, 0, 0) 41%),
+    linear-gradient(240deg, #02141a 40%, rgba(0, 0, 0, 0) 41%),
+    linear-gradient(0deg, #02141a 30%, rgba(0, 0, 0, 0) 31%);
+    background-color: #f6f8f4;
+    width: 0px;
+}
+
+::-webkit-scrollbar-button:vertical:end:increment {
+    background:
+        linear-gradient(300deg, #02141a 40%, rgba(0, 0, 0, 0) 41%),
+        linear-gradient(60deg, #02141a 40%, rgba(0, 0, 0, 0) 41%),
+        linear-gradient(180deg, #02141a 30%, rgba(0, 0, 0, 0) 31%);
+    background-color: #f6f8f4;
+    width: 0px;
 }
 
 textarea{
@@ -45,4 +79,5 @@ textarea:focus{
 
 hr{
 	margin: 0;
+	background-color: #212F3C;
 }
