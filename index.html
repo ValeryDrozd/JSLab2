@@ -15,17 +15,27 @@
 	
 	</div>
 	
-	<div class = "divBlock" style="width: 85%;flex-direction: column;background-color:yellow;height: 100vh;">
-		<textarea id = "writeField" style="margin-top: 53px;">
-		</textarea> 
+	<div class = "divBlock" style="width: 85%;">
+		<div style="height: 3%;width:100%;margin: 0;margin-bottom: 10px; ">
+			<button class="styleButton" onclick='execCmd("bold"); 'style="height: 100%;"><b>B</b></button>
+			<button class="styleButton" onclick='execCmd("italic"); 'style="height: 100%;"><i>I</i></button>
+			<button class="styleButton" onclick='execCmd("underline"); 'tyle="height: 100%;"><u>U</u></button>
+			<button class="styleButton" onclick="test()" style="height: 100%;"><u>TEST</u></button>
+			<input  class="styleButton" style="height: 100%;" type="color" id = textCol value="#ffffff">
+		</div>
+		<iframe name = "writeField" id = "writeField" style="margin-top: 53px;margin: 0;">
+
+		</iframe> 
 	</div>
 </nav>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </body>
 <script type="text/javascript">
-
+	
+	writeField.document.designMode = 'On';
 	let id;
 	let keys;
+	
 	function router(elem){
 		console.log($(elem).val());
 		if($(elem).attr('id')=="createButton")window.location.replace("index.html");
@@ -33,14 +43,37 @@
 		window.location.replace("index.html?id="+$(elem).val());
 	}
 
+	function execCmd(cmd){
+		writeField.document.execCommand(cmd,false,null);
+	}
 	//OK
+	
 	function createButton(data){
 		return '<button id ="'+data['head']+'" class="blockButton" style = "font-size:0.9em;padding-left:5%;"  onclick = router(this) value="'+data['head']+'">'+data['head']+'<br>'+data['text'].substring(0,10)+'<br>'+data['data']+'</button><hr>';
 	}
 
+	function getAllIns(str,sub){
+		let all = [];
+		let pos = 0;
+		while (pos!=-1) {
+		  let foundPos = str.indexOf(target, pos);
+		  all.push(foundPos);
+		  pos = foundPos + 1;
+		}
+		return all;
+	}
+
+	function test(){
+		let val = document.getElementById('writeField').contentWindow.document.body.innerText;
+		alert(val);
+	}
+
+
 	//OK
 	window.addEventListener('beforeunload', function(event) {
-        let text = $("#writeField").val();
+		let text = document.getElementById('writeField').contentWindow.document.body.innerHTML;
+		let splittedText = document.getElementById('writeField').contentWindow.document.body.innerText;
+		text = text.replace(/<(?!(br,b,u,i,font)\s*\/?)[^>]+>/g, '');
         let date = Date().substring(4,15);
         let head = text.trim();
         if(head!=id || id==undefined){
@@ -60,33 +93,34 @@
 			i+=1;
 		}
 		keys.push(head);
-        localStorage.setItem(head,JSON.stringify({"content":text,"date":date}));
+        localStorage.setItem(head,JSON.stringify({"content":text,"date":date,"bold":bold,"italic":italic,'underline':underline}));
         localStorage.setItem("all",JSON.stringify(keys));
+
     });
 	
-	//OK
+	
 	(function () {
+		var head = jQuery("#writeField").contents().find("head");
+		var css = '<link rel="stylesheet" type="text/css" href="iframe.css">';
+		 jQuery(head).append(css);
 		 let queryString = window.location.search;
-         const urlParams = new URLSearchParams(queryString);
-         id = urlParams.get('id');
-         let buttonList = '<button id="createButton" class="blockButton" style="text-align:center;" onclick = "router(this)"> Create new Note </button><hr>';
-  		 keys = JSON.parse(localStorage.getItem("all"));
-  		 if(keys==null)keys = [];  		 
-  		 for(var i = keys.length-1;i>=0;i--){
-  		 	let data = JSON.parse(localStorage.getItem(keys[i]));
-  		 	console.log(data);
-  		 	buttonList+=createButton({"head":keys[i],"data":data["date"],"text":data["content"]});
-  		 }
-         $("#buttonBlock").html(buttonList);
-         console.log(keys);
-         if(id==undefined || id == ""){
-         	$("#createButton").css("background-color","orange");
-         }
-         else{
-         		console.log(id);
-         		$("#"+id).css("background-color","orange");
-         		$("#writeField").val(JSON.parse(localStorage.getItem(id))["content"]);
-         	}
+	     const urlParams = new URLSearchParams(queryString);
+	     id = urlParams.get('id');
+	     let buttonList = '<button id="createButton" class="blockButton" style="text-align:center;" onclick = "router(this)"> Create new Note </button><hr>';
+			 keys = JSON.parse(localStorage.getItem("all"));
+			 if(keys==null)keys = [];  		 
+			 for(var i = keys.length-1;i>=0;i--){
+			 	let data = JSON.parse(localStorage.getItem(keys[i]));
+			 	buttonList+=createButton({"head":keys[i],"data":data["date"],"text":data["content"]});
+			 }
+	     $("#buttonBlock").html(buttonList);
+	     if(id==undefined || id == ""){
+	     	$("#createButton").css("background-color","orange");
+	     }
+	     else{
+	     		$("#"+id).css("background-color","orange");
+				document.getElementById('writeField').contentWindow.document.body.innerHTML = JSON.parse(localStorage.getItem(id))["content"];
+	     	}
 	})();
 	
 
